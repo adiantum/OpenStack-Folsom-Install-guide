@@ -153,25 +153,25 @@ Status: Stable
    service keystone restart
    keystone-manage db_sync
 
-* Fill up the keystone database using the two scripts available in the `Scripts folder <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/tree/master/Scripts>`_ of this git repository. Beware that you MUST modify the HOST_IP variable before executing the scripts::
+* Добавьте в БД keystone записи, используя два скрипта находящиеся в `Scripts folder <https://github.com/adiantum/OpenStack-Folsom-Install-guide/tree/master/Scripts>`_ этого git репозитория. Обратите внимание, что вы ДОЛЖНЫ изменить параметр HOST_IP перед выполнением скриптов::
 
    chmod +x keystone_basic.sh
    chmod +x keystone_endpoints_basic.sh
    ./keystone_basic.sh
    ./keystone_endpoints_basic.sh
 
-* Create a simple credential file and load it so you won't be bothered later::
+* Создайте файл с учетными записями и загрузите его в переменные окружения, чтобы не использовать дополнительных параметров при вызове команд в дальнейшем::
 
    nano creds
-   #Paste the following:
+   #Вставьте следующее:
    export OS_TENANT_NAME=admin
    export OS_USERNAME=admin
    export OS_PASSWORD=admin_pass
    export OS_AUTH_URL="http://192.168.100.232:5000/v2.0/"
-   # Load it:
+   # Загрузите в окружение:
    source creds
 
-* To test Keystone, we use a simple curl request::
+* Для проверки Keystone можно использовать простой curl запрос::
 
    apt-get install curl openssl
    curl http://192.168.100.232:35357/v2.0/endpoints -H 'x-auth-token: ADMIN'
@@ -179,18 +179,18 @@ Status: Stable
 4. Glance
 =====================================================================
 
-* After installing Keystone, we continue with installing image storage service a.k.a Glance::
+* После установки Keystone, мы проинсталлируем сервис образов виртуальных машин a.k.a Glance::
 
    apt-get install glance python-glance python-glanceclient
 
-* Create a new MySQL database for Glance::
+* Создайте новую базу данных MySQL для Glance::
 
    mysql -u root -p
    CREATE DATABASE glance;
    GRANT ALL ON glance.* TO 'glanceUser'@'%' IDENTIFIED BY 'glancePass';
    quit;
 
-* Update /etc/glance/glance-api-paste.ini with::
+* Внесите следующие изменения в /etc/glance/glance-api-paste.ini::
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
@@ -201,7 +201,7 @@ Status: Stable
    admin_user = glance
    admin_password = service_pass
 
-* Update the /etc/glance/glance-registry-paste.ini with::
+* Внесите следующие изменения в /etc/glance/glance-registry-paste.ini::
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
@@ -212,37 +212,37 @@ Status: Stable
    admin_user = glance
    admin_password = service_pass
 
-* Update /etc/glance/glance-api.conf with::
+* Внесите следующие изменения в /etc/glance/glance-api.conf::
 
    sql_connection = mysql://glanceUser:glancePass@192.168.100.232/glance
 
-* And::
+* А также::
 
    [paste_deploy]
    flavor = keystone
 
-* Update the /etc/glance/glance-registry.conf with::
+* Поправьте настройки доступа к БД в /etc/glance/glance-registry.conf::
 
    sql_connection = mysql://glanceUser:glancePass@192.168.100.232/glance
 
-* And::
+* А также::
 
    [paste_deploy]
    flavor = keystone
 
-* Restart the glance-api and glance-registry services::
+* Перезапустите сервисы glance-api и glance-registry::
 
    service glance-api restart; service glance-registry restart
 
-* Synchronize the glance database::
+* Синхронизируйте БД glance::
 
    glance-manage db_sync
 
-* Restart the services again to take into account the new modifications::
+* Перезапустите сервисы еще раз::
 
    service glance-registry restart; service glance-api restart
 
-* To test Glance's well installation, we upload a new image to the store. Start by downloading an ubuntu cloud image to your node and then uploading it to Glance::
+* Для проверки корректности установки Glance's загрузите новый образ в хранилище. Начните с загрузки ubuntu cloud image на вашу ноду и затем сохраните его в Glance::
 
    mkdir images
    cd images
@@ -250,7 +250,7 @@ Status: Stable
    tar xzvf ubuntu-12.04-server-cloudimg-amd64.tar.gz
    glance add name="Ubuntu" is_public=true container_format=ovf disk_format=qcow2 < precise-server-cloudimg-amd64.img
 
-* Now list the images to see what you have just uploaded::
+* Теперь посмотрите список загруженных образов чтобы убедиться что образ был корректно сохранен::
 
    glance image-list
 
