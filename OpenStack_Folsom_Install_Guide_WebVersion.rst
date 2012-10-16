@@ -1,28 +1,31 @@
 ==========================================================
-  OpenStack Folsom Install Guide
+  Руководство по установке OpenStack Folsom
 ==========================================================
 
 :Version: 1.1
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
+:Source: https://github.com/adiantum/OpenStack-Folsom-Install-guide
 :Keywords: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.04 LTE (64 bits).
 
-Authors
+Авторы
 ==========
 
 Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
 
-This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
+Эта работа лицензирована в соответствии с Creative Commons Attribution-ShareAlike 3.0 Unported License.
  
-To view a copy of this license, visit [ http://creativecommons.org/licenses/by-sa/3.0/ ].
+Чтобы посмотреть копию лицензии перейдите по ссылке: [ http://creativecommons.org/licenses/by-sa/3.0/ ].
 
-Table of Contents
+Перевод: Ilya Alekseyev <ilyaalekseyev@acm.org>
+
+Содержание
 =================
 
 ::
 
-  0. What is it?
-  1. Requirements
-  2. Getting Ready
+  0. Что это?
+  1. Требования
+  2. Подготовка
   3. Keystone 
   4. Glance
   5. KVM
@@ -31,51 +34,51 @@ Table of Contents
   8. Nova
   9. Cinder
   10. Horizon
-  11. Start your first VM
-  12. Adding a compute node
-  13. Licencing
-  14. Contacts
-  15. Acknowledgement
+  11. Запуск первой виртуальной машины
+  12. Добавление ноды с вычислительными ресурсами
+  13. Лицензирование
+  14. Контакты
+  15. Благодарности
   16. To do
 
-0. What is it?
+0. Что это?
 ==============
 
-OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
+Руководство по установке OpenStack Folsom это простой и проверенный путь для создания вашей собственной инсталляции платформы OpenStack. 
 
 Version 1.1, 10 Oct 2012
 
 Status: Stable
 
 
-1. Requirements
+1. Требования
 ====================
 
-:Node Role: NICs
-:Control Node: eth0 (192.168.100.232), eth1 (192.168.100.234), eth2 (192.168.100.236)
-:Compute Node: eth0 (192.168.100.250), eth1 (192.168.100.252)
+:Роль ноды: Сетевые интерфейсы
+:Контроллер: eth0 (192.168.100.232), eth1 (192.168.100.234), eth2 (192.168.100.236)
+:Нода вычислительных ресурсов: eth0 (192.168.100.250), eth1 (192.168.100.252)
 
-**Note 1:** You can do a single node install with this guide.
+**Замечание 1:** Используя это руководство вы можете создать инсталляцию на одной ноде.
 
-**Note 2:** If you have only two NICs on the controller node, you can also use this guide but you must ignore anypart related to eth2 and your VMs won't be internet accessible.
+**Замечание 2:** Если у вас имеется только два сетевых интерфейса на контроллере, вы также можете использовать это руководство, но вам необходимо проигнорировать все части относящиеся к eth2 и ваши виртуальные машины не будут иметь доступа к Интернет.
 
 
-2. Getting Ready
+2. Подготовка
 ===============
 
-2.1. Adding the Offical Folsom repositories
+2.1. Добавление официальных репозиториев OpenStack Folsom
 -----------------
 
-* After you install Ubuntu 12.04 Server 64bits, Go to the sudo mode and don't leave it until the end of this guide::
+* После установки Ubuntu 12.04 Server 64bits, перейдите в режим с правами root и не выходите из этого режима пока не закончите установку::
 
    sudo su
 
-* Add the OpenStack Folsom repositories to your ubuntu repositories::
+* Добавьте репозитории OpenStack Folsom к списку репозиториев Ubuntu::
 
    echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/folsom main >> /etc/apt/sources.list.d/folsom.list
    apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 5EDB1B62EC4926EA
 
-* Update your system::
+* Обновите список пакетов::
 
    apt-get update
    apt-get upgrade
@@ -84,43 +87,43 @@ Status: Stable
 2.2. MySQL & RabbitMQ
 ------------
 
-* Install MySQL::
+* Установите MySQL::
 
    apt-get install mysql-server python-mysqldb
 
-* Configure mysql to accept all incoming requests::
+* Сконфигурируйте MySQL, разрешив все входящие соединения::
 
    sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/my.cnf
    service mysql restart
 
-* Install RabbitMQ::
+* Установите RabbitMQ::
 
    apt-get install rabbitmq-server 
 
-2.3. Node synchronization
+2.3. Синхронизация нод
 ------------------
 
-* Install other services::
+* Установите NTP сервис::
 
    apt-get install ntp
 
-* Configure the NTP server to synchronize between your compute nodes and the controller node::
+* Сконфигурируйте NTP сервер для синхронизации между нодой контроллера и нодой вычислительныз ресурсов::
    
    sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf
    service ntp restart  
 
-2.4. Others
+2.4. Другие сервисы
 -------------------
-* Install other services::
+* Установите другие необходимые сервисы::
 
    apt-get install vlan bridge-utils
 
-* Enable IP_Forwarding::
+* Разрешите IP_Forwarding::
 
    nano /etc/sysctl.conf
    #Uncomment net.ipv4.ip\_forward=1
 
-* You can verify that IP_Forwarding is enabled by issuing this command::
+* Вы можете проверить что IP_Forwarding включен выполнив следующую команду::
    
    sysctl -p
    # The valid response should be this: net.ipv4.ip_forward = 1
@@ -128,24 +131,24 @@ Status: Stable
 3. Keystone
 =====================================================================
 
-This is how we install OpenStack's identity service:
+Раздел описывает установку сервиса идентификации OpenStack:
 
-* Start by the keystone packages::
+* Установите пакеты keystone::
 
    apt-get install keystone python-keystone python-keystoneclient
 
-* Create a new MySQL database for keystone::
+* Создайте новую базу данных в MySQL для keystone::
 
    mysql -u root -p
    CREATE DATABASE keystone;
    GRANT ALL ON keystone.* TO 'keystoneUser'@'%' IDENTIFIED BY 'keystonePass';
    quit;
 
-* Adapt the connection attribute in the /etc/keystone/keystone.conf to the new database::
+* Скорректируй настройки подключения к новой БД в файле /etc/keystone/keystone.conf::
 
    connection = mysql://keystoneUser:keystonePass@192.168.100.232/keystone
 
-* Restart the identity service then synchronize the database::
+* Перезапустите сервис идентификации, а затем синхронизируйте БД::
 
    service keystone restart
    keystone-manage db_sync
