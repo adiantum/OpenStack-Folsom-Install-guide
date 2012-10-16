@@ -9,6 +9,6 @@ OpenStack-Folsom-Install-guide
 
 Это легко, просто и проверено.
 
-Не моежете ждать? Перейдите по ссылке и проверьте сами: 
+Не можете ждать? Перейдите по ссылке и проверьте сами: 
 
 [ https://github.com/adiantum/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst ]
