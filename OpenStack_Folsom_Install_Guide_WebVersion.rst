@@ -2,10 +2,10 @@
   Руководство по установке OpenStack Folsom
 ==========================================================
 
-:Version: 1.1
-:Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
-:Source: https://github.com/adiantum/OpenStack-Folsom-Install-guide
-:Keywords: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.04 LTE (64 bits).
+:Версия: 1.1
+:Источник: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
+:Перевод: https://github.com/adiantum/OpenStack-Folsom-Install-guide
+:Ключевые слова: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.04 LTE (64 bits).
 
 Авторы
 ==========
@@ -107,7 +107,7 @@ Status: Stable
 
    apt-get install ntp
 
-* Сконфигурируйте NTP сервер для синхронизации между нодой контроллера и нодой вычислительныз ресурсов::
+* Сконфигурируйте NTP сервер для синхронизации между нодой контроллера и нодой вычислительных ресурсов::
    
    sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf
    service ntp restart  
@@ -144,7 +144,7 @@ Status: Stable
    GRANT ALL ON keystone.* TO 'keystoneUser'@'%' IDENTIFIED BY 'keystonePass';
    quit;
 
-* Скорректируй настройки подключения к новой БД в файле /etc/keystone/keystone.conf::
+* Скорректируйте настройки подключения к новой БД в файле /etc/keystone/keystone.conf::
 
    connection = mysql://keystoneUser:keystonePass@192.168.100.232/keystone
 
