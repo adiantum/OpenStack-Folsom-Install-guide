@@ -1,11 +1,14 @@
 OpenStack-Folsom-Install-guide
 ==============================
 
-You want to install OpenStack Folsom with Quantum and you don't know how ?
-This is what you are looking for !
+Перевод руководства по установке. 
+Оригинал: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
 
-It's easy, simple and tested.
+Вы хотите установить OpenStack Folsom вместе с Quantum и не знаете как ?
+Это именно то, что вы искали !
 
-Can't wait? Go here to check it by yourself: 
+Это легко, просто и проверено.
 
-[ https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst ]
+Не моежете ждать? Перейдите по ссылке и проверьте сами: 
+
+[ https://github.com/adiantum/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst ]
